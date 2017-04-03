@@ -1,0 +1,384 @@
+<html><head></head><body><div class="apidocDiv">
+<style>
+/*csslint
+*/
+.apidocDiv {
+    background: #fff;
+    font-family: Arial, Helvetica, sans-serif;
+}
+.apidocDiv a[href] {
+    color: #33f;
+    font-weight: bold;
+    text-decoration: none;
+}
+.apidocDiv a[href]:hover {
+    text-decoration: underline;
+}
+.apidocCodeCommentSpan {
+    background: #bbf;
+    color: #000;
+    display: block;
+}
+.apidocCodeKeywordSpan {
+    color: #d00;
+    font-weight: bold;
+}
+.apidocCodePre {
+    background: #eef;
+    border: 1px solid;
+    color: #777;
+    padding: 5px;
+    white-space: pre-wrap;
+}
+.apidocFooterDiv {
+    margin-top: 20px;
+    text-align: center;
+}
+.apidocModuleLi {
+    margin-top: 10px;
+}
+.apidocSectionDiv {
+    border-top: 1px solid;
+    margin-top: 20px;
+}
+.apidocSignatureSpan {
+    color: #777;
+    font-weight: bold;
+}
+</style>
+<h1>api documentation for
+    <a href="https://github.com/jshttp/mime-types#readme">mime-types (v2.1.15)</a>
+</h1>
+<h4>The ultimate javascript content-type utility.</h4>
+<div class="apidocSectionDiv"><a href="#apidoc.tableOfContents" id="apidoc.tableOfContents"><h1>table of contents</h1></a><ol>
+
+    <li class="apidocModuleLi"><a href="#apidoc.module.mime-types">module mime-types</a><ol>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.mime-types.charset">
+            function <span class="apidocSignatureSpan">mime-types.</span>charset
+            <span class="apidocSignatureSpan">(type)</span>
+            </a>
+
+        </li>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.mime-types.contentType">
+            function <span class="apidocSignatureSpan">mime-types.</span>contentType
+            <span class="apidocSignatureSpan">(str)</span>
+            </a>
+
+        </li>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.mime-types.extension">
+            function <span class="apidocSignatureSpan">mime-types.</span>extension
+            <span class="apidocSignatureSpan">(type)</span>
+            </a>
+
+        </li>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.mime-types.lookup">
+            function <span class="apidocSignatureSpan">mime-types.</span>lookup
+            <span class="apidocSignatureSpan">(path)</span>
+            </a>
+
+        </li>
+
+        <li>
+
+            <span class="apidocSignatureSpan">object <span class="apidocSignatureSpan">mime-types.</span>charsets</span>
+
+        </li>
+
+        <li>
+
+            <span class="apidocSignatureSpan">object <span class="apidocSignatureSpan">mime-types.</span>extensions</span>
+
+        </li>
+
+        <li>
+
+            <span class="apidocSignatureSpan">object <span class="apidocSignatureSpan">mime-types.</span>types</span>
+
+        </li>
+
+    </ol></li>
+
+    <li class="apidocModuleLi"><a href="#apidoc.module.mime-types.charsets">module mime-types.charsets</a><ol>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.mime-types.charsets.lookup">
+            function <span class="apidocSignatureSpan">mime-types.charsets.</span>lookup
+            <span class="apidocSignatureSpan">(type)</span>
+            </a>
+
+        </li>
+
+    </ol></li>
+
+</ol></div>
+
+<div class="apidocSectionDiv">
+<h1><a href="#apidoc.module.mime-types" id="apidoc.module.mime-types">module mime-types</a></h1>
+
+
+    <h2>
+        <a href="#apidoc.element.mime-types.charset" id="apidoc.element.mime-types.charset">
+        function <span class="apidocSignatureSpan">mime-types.</span>charset
+        <span class="apidocSignatureSpan">(type)</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">function charset(type) {
+  if (!type || typeof type !== 'string') {
+    return false
+  }
+
+  // TODO: use media-typer
+  var match = extractTypeRegExp.exec(type)
+  var mime = match &amp;&amp; db[match[1].toLowerCase()]
+
+  if (mime &amp;&amp; mime.charset) {
+    return mime.charset
+  }
+
+  // default text/* to utf-8
+  if (match &amp;&amp; textTypeRegExp.test(match[1])) {
+    return 'UTF-8'
+  }
+
+  return false
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+
+Get the default extension for a content-type.
+
+```js
+mime.extension('application/octet-stream') // 'bin'
+```
+
+### mime.<span class="apidocCodeKeywordSpan">charset</span>(type)
+
+Lookup the implied default charset of a content-type.
+
+```js
+mime.charset('text/x-markdown') // 'UTF-8'
+```
+...</pre></li>
+    </ul>
+
+
+
+    <h2>
+        <a href="#apidoc.element.mime-types.contentType" id="apidoc.element.mime-types.contentType">
+        function <span class="apidocSignatureSpan">mime-types.</span>contentType
+        <span class="apidocSignatureSpan">(str)</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">function contentType(str) {
+  // TODO: should this even be in this module?
+  if (!str || typeof str !== 'string') {
+    return false
+  }
+
+  var mime = str.indexOf('/') === -1
+    ? exports.lookup(str)
+    : str
+
+  if (!mime) {
+    return false
+  }
+
+  // TODO: use content-type or other module
+  if (mime.indexOf('charset') === -1) {
+    var charset = exports.charset(mime)
+    if (charset) mime += '; charset=' + charset.toLowerCase()
+  }
+
+  return mime
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+mime.lookup('file.html')        // 'text/html'
+mime.lookup('folder/file.js')   // 'application/javascript'
+mime.lookup('folder/.htaccess') // false
+
+mime.lookup('cats') // false
+```
+
+### mime.<span class="apidocCodeKeywordSpan">contentType</span>(type)
+
+Create a full content-type header given a content-type or extension.
+
+```js
+mime.contentType('markdown')  // 'text/x-markdown; charset=utf-8'
+mime.contentType('file.json') // 'application/json; charset=utf-8'
+...</pre></li>
+    </ul>
+
+
+
+    <h2>
+        <a href="#apidoc.element.mime-types.extension" id="apidoc.element.mime-types.extension">
+        function <span class="apidocSignatureSpan">mime-types.</span>extension
+        <span class="apidocSignatureSpan">(type)</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">function extension(type) {
+  if (!type || typeof type !== 'string') {
+    return false
+  }
+
+  // TODO: use media-typer
+  var match = extractTypeRegExp.exec(type)
+
+  // get extensions
+  var exts = match &amp;&amp; exports.extensions[match[1].toLowerCase()]
+
+  if (!exts || !exts.length) {
+    return false
+  }
+
+  return exts[0]
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+mime.contentType('markdown')  // 'text/x-markdown; charset=utf-8'
+mime.contentType('file.json') // 'application/json; charset=utf-8'
+
+// from a full path
+mime.contentType(path.extname('/path/to/file.json')) // 'application/json; charset=utf-8'
+```
+
+### mime.<span class="apidocCodeKeywordSpan">extension</span>(type)
+
+Get the default extension for a content-type.
+
+```js
+mime.extension('application/octet-stream') // 'bin'
+```
+...</pre></li>
+    </ul>
+
+
+
+    <h2>
+        <a href="#apidoc.element.mime-types.lookup" id="apidoc.element.mime-types.lookup">
+        function <span class="apidocSignatureSpan">mime-types.</span>lookup
+        <span class="apidocSignatureSpan">(path)</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">function lookup(path) {
+  if (!path || typeof path !== 'string') {
+    return false
+  }
+
+  // get the extension ("ext" or ".ext" or full path)
+  var extension = extname('x.' + path)
+    .toLowerCase()
+    .substr(1)
+
+  if (!extension) {
+    return false
+  }
+
+  return exports.types[extension] || false
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+
+The ultimate javascript content-type utility.
+
+Similar to [the `mime` module](https://www.npmjs.com/package/mime), except:
+
+- __No fallbacks.__ Instead of naively returning the first available type,
+  `mime-types` simply returns `false`, so do
+  `var type = mime.<span class="apidocCodeKeywordSpan">lookup</span>('unrecognized') || 'application/octet-stream
+'`.
+- No `new Mime()` business, so you could do `var lookup = require('mime-types').lookup`.
+- No `.define()` functionality
+- Bug fixes for `.lookup(path)`
+
+Otherwise, the API is compatible.
+
+## Install
+...</pre></li>
+    </ul>
+
+
+
+
+
+
+
+
+</div>
+
+<div class="apidocSectionDiv">
+<h1><a href="#apidoc.module.mime-types.charsets" id="apidoc.module.mime-types.charsets">module mime-types.charsets</a></h1>
+
+
+    <h2>
+        <a href="#apidoc.element.mime-types.charsets.lookup" id="apidoc.element.mime-types.charsets.lookup">
+        function <span class="apidocSignatureSpan">mime-types.charsets.</span>lookup
+        <span class="apidocSignatureSpan">(type)</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">function charset(type) {
+  if (!type || typeof type !== 'string') {
+    return false
+  }
+
+  // TODO: use media-typer
+  var match = extractTypeRegExp.exec(type)
+  var mime = match &amp;&amp; db[match[1].toLowerCase()]
+
+  if (mime &amp;&amp; mime.charset) {
+    return mime.charset
+  }
+
+  // default text/* to utf-8
+  if (match &amp;&amp; textTypeRegExp.test(match[1])) {
+    return 'UTF-8'
+  }
+
+  return false
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+
+The ultimate javascript content-type utility.
+
+Similar to [the `mime` module](https://www.npmjs.com/package/mime), except:
+
+- __No fallbacks.__ Instead of naively returning the first available type,
+  `mime-types` simply returns `false`, so do
+  `var type = mime.<span class="apidocCodeKeywordSpan">lookup</span>('unrecognized') || 'application/octet-stream
+'`.
+- No `new Mime()` business, so you could do `var lookup = require('mime-types').lookup`.
+- No `.define()` functionality
+- Bug fixes for `.lookup(path)`
+
+Otherwise, the API is compatible.
+
+## Install
+...</pre></li>
+    </ul>
+
+
+</div>
+
+<div class="apidocFooterDiv">
+    [ this document was created with
+    <a href="https://github.com/kaizhu256/node-utility2" target="_blank">utility2</a>
+    ]
+</div>
+</div>
+</body></html>
