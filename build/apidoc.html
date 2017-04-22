@@ -111,6 +111,12 @@
 
         <li>
 
+            <span class="apidocSignatureSpan">object <span class="apidocSignatureSpan">mime-types.</span>index</span>
+
+        </li>
+
+        <li>
+
             <span class="apidocSignatureSpan">object <span class="apidocSignatureSpan">mime-types.</span>types</span>
 
         </li>
@@ -125,6 +131,64 @@
             function <span class="apidocSignatureSpan">mime-types.charsets.</span>lookup
             <span class="apidocSignatureSpan">(type)</span>
             </a>
+
+        </li>
+
+    </ol></li>
+
+    <li class="apidocModuleLi"><a href="#apidoc.module.mime-types.index">module mime-types.index</a><ol>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.mime-types.index.charset">
+            function <span class="apidocSignatureSpan">mime-types.index.</span>charset
+            <span class="apidocSignatureSpan">(type)</span>
+            </a>
+
+        </li>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.mime-types.index.contentType">
+            function <span class="apidocSignatureSpan">mime-types.index.</span>contentType
+            <span class="apidocSignatureSpan">(str)</span>
+            </a>
+
+        </li>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.mime-types.index.extension">
+            function <span class="apidocSignatureSpan">mime-types.index.</span>extension
+            <span class="apidocSignatureSpan">(type)</span>
+            </a>
+
+        </li>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.mime-types.index.lookup">
+            function <span class="apidocSignatureSpan">mime-types.index.</span>lookup
+            <span class="apidocSignatureSpan">(path)</span>
+            </a>
+
+        </li>
+
+        <li>
+
+            <span class="apidocSignatureSpan">object <span class="apidocSignatureSpan">mime-types.index.</span>charsets</span>
+
+        </li>
+
+        <li>
+
+            <span class="apidocSignatureSpan">object <span class="apidocSignatureSpan">mime-types.index.</span>extensions</span>
+
+        </li>
+
+        <li>
+
+            <span class="apidocSignatureSpan">object <span class="apidocSignatureSpan">mime-types.index.</span>types</span>
 
         </li>
 
@@ -326,6 +390,8 @@ Otherwise, the API is compatible.
 
 
 
+
+
 </div>
 
 <div class="apidocSectionDiv">
@@ -378,6 +444,202 @@ Otherwise, the API is compatible.
 ## Install
 ...</pre></li>
     </ul>
+
+
+</div>
+
+<div class="apidocSectionDiv">
+<h1><a href="#apidoc.module.mime-types.index" id="apidoc.module.mime-types.index">module mime-types.index</a></h1>
+
+
+    <h2>
+        <a href="#apidoc.element.mime-types.index.charset" id="apidoc.element.mime-types.index.charset">
+        function <span class="apidocSignatureSpan">mime-types.index.</span>charset
+        <span class="apidocSignatureSpan">(type)</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">function charset(type) {
+  if (!type || typeof type !== &#x27;string&#x27;) {
+    return false
+  }
+
+  // TODO: use media-typer
+  var match = extractTypeRegExp.exec(type)
+  var mime = match &#x26;&#x26; db[match[1].toLowerCase()]
+
+  if (mime &#x26;&#x26; mime.charset) {
+    return mime.charset
+  }
+
+  // default text/* to utf-8
+  if (match &#x26;&#x26; textTypeRegExp.test(match[1])) {
+    return &#x27;UTF-8&#x27;
+  }
+
+  return false
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+
+Get the default extension for a content-type.
+
+```js
+mime.extension(&#x27;application/octet-stream&#x27;) // &#x27;bin&#x27;
+```
+
+### mime.<span class="apidocCodeKeywordSpan">charset</span>(type)
+
+Lookup the implied default charset of a content-type.
+
+```js
+mime.charset(&#x27;text/x-markdown&#x27;) // &#x27;UTF-8&#x27;
+```
+...</pre></li>
+    </ul>
+
+
+
+    <h2>
+        <a href="#apidoc.element.mime-types.index.contentType" id="apidoc.element.mime-types.index.contentType">
+        function <span class="apidocSignatureSpan">mime-types.index.</span>contentType
+        <span class="apidocSignatureSpan">(str)</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">function contentType(str) {
+  // TODO: should this even be in this module?
+  if (!str || typeof str !== &#x27;string&#x27;) {
+    return false
+  }
+
+  var mime = str.indexOf(&#x27;/&#x27;) === -1
+    ? exports.lookup(str)
+    : str
+
+  if (!mime) {
+    return false
+  }
+
+  // TODO: use content-type or other module
+  if (mime.indexOf(&#x27;charset&#x27;) === -1) {
+    var charset = exports.charset(mime)
+    if (charset) mime += &#x27;; charset=&#x27; + charset.toLowerCase()
+  }
+
+  return mime
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+mime.lookup(&#x27;file.html&#x27;)        // &#x27;text/html&#x27;
+mime.lookup(&#x27;folder/file.js&#x27;)   // &#x27;application/javascript&#x27;
+mime.lookup(&#x27;folder/.htaccess&#x27;) // false
+
+mime.lookup(&#x27;cats&#x27;) // false
+```
+
+### mime.<span class="apidocCodeKeywordSpan">contentType</span>(type)
+
+Create a full content-type header given a content-type or extension.
+
+```js
+mime.contentType(&#x27;markdown&#x27;)  // &#x27;text/x-markdown; charset=utf-8&#x27;
+mime.contentType(&#x27;file.json&#x27;) // &#x27;application/json; charset=utf-8&#x27;
+...</pre></li>
+    </ul>
+
+
+
+    <h2>
+        <a href="#apidoc.element.mime-types.index.extension" id="apidoc.element.mime-types.index.extension">
+        function <span class="apidocSignatureSpan">mime-types.index.</span>extension
+        <span class="apidocSignatureSpan">(type)</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">function extension(type) {
+  if (!type || typeof type !== &#x27;string&#x27;) {
+    return false
+  }
+
+  // TODO: use media-typer
+  var match = extractTypeRegExp.exec(type)
+
+  // get extensions
+  var exts = match &#x26;&#x26; exports.extensions[match[1].toLowerCase()]
+
+  if (!exts || !exts.length) {
+    return false
+  }
+
+  return exts[0]
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+mime.contentType(&#x27;markdown&#x27;)  // &#x27;text/x-markdown; charset=utf-8&#x27;
+mime.contentType(&#x27;file.json&#x27;) // &#x27;application/json; charset=utf-8&#x27;
+
+// from a full path
+mime.contentType(path.extname(&#x27;/path/to/file.json&#x27;)) // &#x27;application/json; charset=utf-8&#x27;
+```
+
+### mime.<span class="apidocCodeKeywordSpan">extension</span>(type)
+
+Get the default extension for a content-type.
+
+```js
+mime.extension(&#x27;application/octet-stream&#x27;) // &#x27;bin&#x27;
+```
+...</pre></li>
+    </ul>
+
+
+
+    <h2>
+        <a href="#apidoc.element.mime-types.index.lookup" id="apidoc.element.mime-types.index.lookup">
+        function <span class="apidocSignatureSpan">mime-types.index.</span>lookup
+        <span class="apidocSignatureSpan">(path)</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">function lookup(path) {
+  if (!path || typeof path !== &#x27;string&#x27;) {
+    return false
+  }
+
+  // get the extension (&#x22;ext&#x22; or &#x22;.ext&#x22; or full path)
+  var extension = extname(&#x27;x.&#x27; + path)
+    .toLowerCase()
+    .substr(1)
+
+  if (!extension) {
+    return false
+  }
+
+  return exports.types[extension] || false
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+
+The ultimate javascript content-type utility.
+
+Similar to [the `mime` module](https://www.npmjs.com/package/mime), except:
+
+- __No fallbacks.__ Instead of naively returning the first available type,
+  `mime-types` simply returns `false`, so do
+  `var type = mime.<span class="apidocCodeKeywordSpan">lookup</span>(&#x27;unrecognized&#x27;) || &#x27;application/octet-stream
+&#x27;`.
+- No `new Mime()` business, so you could do `var lookup = require(&#x27;mime-types&#x27;).lookup`.
+- No `.define()` functionality
+- Bug fixes for `.lookup(path)`
+
+Otherwise, the API is compatible.
+
+## Install
+...</pre></li>
+    </ul>
+
+
+
+
+
+
 
 
 </div>
